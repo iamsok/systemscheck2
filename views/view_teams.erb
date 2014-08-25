@@ -1,0 +1,8 @@
+
+<h1> View Teams </h1>
+<ul>
+  <% @teams_data.each do |row| %>
+  <li><a href='/<%= row %>'><%= row %></a></li>
+  <% end %>
+</ul>
+
