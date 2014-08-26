@@ -75,7 +75,10 @@ p opponents(read_scores_from, get_teamlist(read_scores_from))
 ####################################################################
 
 get '/' do
-  @teams_data = get_teamlist(read_scores_from)
+  game_data = read_scores_from
+  team_list = get_teamlist(game_data)
+  @teams_data = opponents(game_data, team_list)
+
   erb :view_teams
 end
 
