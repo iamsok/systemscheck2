@@ -1,8 +1,8 @@
-
 <h1> View Teams </h1>
+
 <ul>
-  <% @teams_data.each do |row| %>
-  <li><a href='/<%= row %>'><%= row %></a></li>
+  <% @teams_data.each do |team| %>
+    <li><a href='/<%= team[:name] %>'><%= "Team: #{team[:name]}, wins: #{team[:win]}, losses: #{team[:loss]}" %></a></li>
   <% end %>
 </ul>
 

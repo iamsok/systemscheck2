@@ -22,6 +22,7 @@ def read_scores_from
   CSV.foreach('scores.csv', headers: true, header_converters: :symbol) do |row|
     teams_data << row.to_hash
   end
+
   teams_data
 end
 
@@ -32,12 +33,14 @@ def get_teamlist(teams_data)
     teams << team[:home_team]
     teams << team[:away_team]
   end
+
   teams.uniq!
 end
 
 def opponents(teams_data, teams)
   stored_team = []
   counter = 0
+
   teams.each do |team|
     stored_team << {name: team, opponent: [], win: 0, loss: 0}
 
@@ -46,43 +49,36 @@ def opponents(teams_data, teams)
         stored_team[counter][:opponent] << row[:away_team]
         if row[:home_score] > row[:away_score]
           stored_team[counter][:win] += 1
-          elsif row[:home_score] < row[:away_score]
-            stored_team[counter][:loss] += 1
+        elsif row[:home_score] < row[:away_score]
+          stored_team[counter][:loss] += 1
         end
       elsif team == row[:away_team]
         stored_team[counter][:opponent] << row[:home_team]
-          if row[:away_score] > row[:home_score]
-            stored_team[counter][:win] += 1
-          elsif row[:home_score] < row[:away_score]
-            stored_team[counter][:loss] += 1
-           end
+        if row[:away_score] > row[:home_score]
+          stored_team[counter][:win] += 1
+        elsif row[:home_score] < row[:away_score]
+          stored_team[counter][:loss] += 1
         end
       end
+    end
+
     counter += 1
   end
+
   stored_team
 end
 
-
 p opponents(read_scores_from, get_teamlist(read_scores_from))
-
-
-
-
-
-
-
-
-
-
-
 
 ####################################################################
 ###################### R O U T E S #################################
 ####################################################################
 
 get '/' do
-  @teams_data = get_teamlist(read_scores_from)
+  game_data = read_scores_from
+  team_list = get_teamlist(game_data)
+  @teams_data = opponents(game_data, team_list)
+
   erb :view_teams
 end
 
